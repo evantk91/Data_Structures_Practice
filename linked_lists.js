@@ -190,12 +190,84 @@ LinkedList.prototype.deleteAt = function(index) {
 
 }
 
-let list = new LinkedList()
-list.prepend(1)
-list.prepend(2)
-list.prepend(3)
-list.append(3)
-list.deleteAt(5)
+LinkedList.prototype.reverse = function(head) {
+    let current = this.head;
+    let previous = null;
+    let temp = null;
 
+    while (current !== null) {
+        temp = current.next;
+        current.next = previous;
+        previous = current;
+        current = temp;
+    }
 
-console.log(list.toArray())
+    return previous;
+}
+
+LinkedList.prototype.iscircular = function() {
+    if(!this.head) {
+        return false;
+    }
+
+    let slow = this.head;
+    let fast = this.head;
+
+    while (fast && fast.next) {
+        slow = slow.next;
+        fast = fast.next.next;
+        if(slow === fast) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function merge(list1, list2) {
+    let merged = new LinkedList(null)
+
+    if(!list1) {
+        return list2
+    }
+
+    if(!list2) {
+        return list1
+    }
+
+    let list1_node = list1.head;
+    let list2_node = list2.head;
+    while (list1_node !== null || list2_node !== null) {
+        if(list1_node === null) {
+            merged.append(list2_node.value)
+            list2_node = list2_node.next
+        } else if(list2_node === null) {
+            merged.append(list1_node.value)
+            list1_node = list1_node.next
+        } else if(list1_node.value <= list2_node.value) {
+            merged.append(list1_node.value)
+            list1_node = list1_node.next
+        } else {
+            merged.append(list2_node.value)
+            list2_node = list2_node.next
+        }
+    }
+
+    return merged;
+}
+
+let list1 = new LinkedList()
+list1.append(1)
+list1.append(4)
+list1.append(5)
+
+let list2 = new LinkedList()
+list2.append(2)
+list2.append(3)
+list2.append(7)
+
+console.log(list1.toArray())
+console.log(list2.toArray())
+
+let list3 = merge(list1, list2)
+console.log(list3.toArray())
