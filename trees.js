@@ -74,37 +74,97 @@ class Stack {
     }
 }
 
+class State {
+    constructor(node) {
+        this.node = node;
+        this.visitedLeft = False;
+        this.visitedRight = False;
+    }
+
+    getNode = function() {
+        return this.node;
+    }
+
+    getVisitedLeft = function() {
+        return this.visitedLeft;
+    }
+
+    getVisitedRight = function() {
+        return this.visitedRight;
+    }
+
+    setVisitedLeft = function() {
+        this.visitedLeft === true;
+    }
+
+    setVisitedRight = function() {
+        this.visitedRight === true;
+    }
+}
+
+class Deque {
+   constructor() {
+      this.items = [];    
+   }
+
+   isEmpty() {
+      return !Boolean(this.items.length); 
+   }
+
+   addFront(item) {
+      this.items.unshift(item);    
+   }
+   
+   addRear(item) {
+      this.items.push(item); 
+   }
+
+   removeFront() {
+      return this.items.shift();    
+   }
+
+   removeRear() {
+      return this.items.pop();    
+   }
+
+   size() {
+      return this.items.length; 
+   }
+}
+
 function preOrderDFS(tree) {
     let visitOrder = [];
     let stack = new Stack();
     let node = tree.getRoot();
 
-    stack.push(node);
-    node = stack.top();
     visitOrder.push(node.getValue());
+    let state = new State(node);
+    stack.push(state);
 
     let count = 0;
-    let loopLimit = 7;
     while(node) {
         count += 1;
-        if(node.hasLeftChild()) {
+        if(node.hasLeftChild() && !state.getVisitedLeft()) {
+           state.setVisitedLeft();
            node = node.getLeftChild();
-           //add to top of stack
-           stack.push(node);
-           node = stack.top();
-           //add to visit order
+           //add visited node to visit order
            visitOrder.push(node.getValue());
-        } else if(node.hasRightChild()) {
+           //add new state for next node to top of stack
+           state = new State(node);
+           stack.push(state);
+        } else if(node.hasRightChild() && !state.getVisitedRight()) {
+           state.setVisitedRight(); 
            node = node.hasRightChild();
-           //add to top of stack
-           stack.push(node);
-           node = stack.top();
-           //add to visit order
+           //add visited node to visit order
            visitOrder.push(node.getValue());
+           //add to top of stack
+           state = new State(node);
+           stack.push(node);
         } else {
            stack.pop()
            if(!stack.isEmpty()) {
-              node = stack.top()
+               state = stack.pop();
+              node = state.getNode();
            } else {
               node = null; 
            }
@@ -114,6 +174,82 @@ function preOrderDFS(tree) {
     return visitOrder;
 }
 
+function preOrderRecursive(tree) {
+    let visitOrder = [];
+    let root = tree.getRoot();
+
+    function traverse(node) {
+        if(node) {
+            visitOrder.push(node.getValue());
+            traverse(node.getLeftChild());
+            traverse(node.getRightChild());
+        }
+    }
+
+    traverse(root);
+    return visitOrder;
+}
+
+function inOrderRecursive(tree) {
+    let visitOrder = [];
+    let root = tree.getRoot();
+
+    function traverse(node) {
+        if(node) {
+            traverse(node.getLeftChild());
+            visitOrder.push(node.getValue());
+            traverse(node.getRightChild());
+        }
+    }
+
+    traverse(root);
+    return visitOrder;
+}
+
+function postOrderRecursive(tree) {
+    let visitOrder = [];
+    let root = tree.getRoot();
+
+    function traverse(node) {
+        if(node) {
+            traverse(node.getLeftChild());
+            traverse(node.getRightChild());
+            visitOrder.push(node.getValue());
+        }
+    }
+
+    traverse(root);
+    return visitOrder;
+}
+
+function BFS(tree) {
+    //initialize visit order and queue
+    let visitOrder = [];
+    let queue = new Deque();
+    //start at the root of the tree
+    let node = tree.getRoot();
+    //add node to queue
+    queue.addRear(node)
+    console.log(queue.size())
+    //while queue is not empty
+    while(queue.size()) {
+        //remove node from front of queue and add to visit order
+        node = queue.removeFront();
+        visitOrder.push(node.value);
+        //add left child to queue
+        if(node.hasLeftChild()) {
+            queue.addRear(node.getLeftChild())
+        }
+        //add right child to queue
+        if(node.hasRightChild()) {
+            queue.addRear(node.getRightChild())
+        }
+    }
+
+    return visitOrder
+}
+
+
 let tree = new Tree('apple')
 let node2 = new Node('banana')
 tree.getRoot().setLeftChild(node2)
@@ -122,4 +258,10 @@ tree.getRoot().setRightChild(node3)
 let node4 = new Node('dates')
 tree.getRoot().getLeftChild().setLeftChild(node4) 
 
-console.log(preOrderDFS(tree))
+let deque = new Deque()
+deque.addFront(1)
+deque.addFront(2)
+deque.addRear(3)
+deque.removeFront()
+
+console.log(BFS(tree))
