@@ -3,6 +3,7 @@ class Node {
         this.value = value;
         this.left = null;
         this.right = null;
+        this.level = null;
     }
 
     getValue = function() {
@@ -45,6 +46,51 @@ class Tree {
 
     getRoot = function() {
         return this.root;
+    }
+
+    printTree = function() {
+        let level = 0;
+        let queue = new Deque();
+        let visitOrder = [];
+
+        let node = this.getRoot();
+        node.level = level;
+        queue.addRear([node, level]);
+ 
+        while(queue.items.length > 0) {
+           [node, level] = queue.removeFront();
+
+           if(node === null) {
+              visitOrder.push(["<empty>", level]);
+              continue;
+           }
+           visitOrder.push([node, level]);
+
+           if(node.hasLeftChild()) {
+              queue.addRear([node.getLeftChild(), level + 1]);
+           } else {
+              queue.addRear([null, level + 1])
+           }
+
+           if(node.hasRightChild()) {
+              queue.addRear([node.getRightChild(), level + 1]);
+           } else {
+              queue.addRear([null, level + 1])
+           }
+        }
+
+        let s = "Tree\n";
+        let previousLevel = -1;
+        for(let i = 0; i < visitOrder.length; i++) {
+            [node, level] = visitOrder[i];
+            if(level === previousLevel) {
+                s += " | " + (node === "<empty>" ? "<empty>" : String(node.value));
+            } else {
+                s += "\n" + (node === "<empty>" ? "<empty>" : String(node.value));
+                previousLevel = level;
+            }
+        }
+        console.log(s);
     }
 }
 
@@ -264,4 +310,4 @@ deque.addFront(2)
 deque.addRear(3)
 deque.removeFront()
 
-console.log(BFS(tree))
+tree.printTree()
