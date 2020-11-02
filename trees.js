@@ -48,6 +48,74 @@ class Tree {
         return this.root;
     }
 
+    setRoot = function(value) {
+        this.root = new Node(value);
+    }
+
+    compare = function(node, newNode) {
+        if(newNode.getValue() === node.getValue()) {
+            return 0;
+        } else if(newNode.getValue() < node.getValue()) {
+            return -1;
+        } else {
+            return 1;
+        }
+    }
+
+    insertBSTree = function(value) {
+        let node = new Node(value);
+
+        if(this.getRoot() === null) {
+            this.setRoot(value);
+            return;
+        }
+        this.recursiveInsert(this.getRoot(), node);
+    }
+
+    recursiveInsert = function(node, newNode) {
+        let comparison = this.compare(node, newNode);
+
+        if(comparison === 0) {
+            node.setValue(newNode.getValue());
+        } else if(comparison === -1) {
+            if(node.hasLeftChild()) {
+                this.recursiveInsert(node.getLeftChild(), newNode);
+            } else {
+                node.setLeftChild(newNode);
+            }
+        } else {
+            if(node.hasRightChild()) {
+                this.recursiveInsert(node.getRightChild(), newNode);
+            } else {
+                node.setRightChild(newNode);
+            }
+        }
+    }
+
+    searchBST = function(value) {
+        let node = this.getRoot();
+        let searchNode = new Node(value);
+
+        while(true) {
+            let comparison = this.compare(node, searchNode);
+            if(comparison === 0) {
+                return true;
+            } else if(comparison === -1) {
+                if(node.hasLeftChild()) {
+                    node = node.getLeftChild();
+                } else {
+                    return false;
+                }
+            } else {
+                if(node.hasRightChild()) {
+                    node = node.getRightChild();
+                } else {
+                    return false;
+                }
+            }
+        }
+    }
+
     printTree = function() {
         let level = 0;
         let queue = new Deque();
@@ -295,19 +363,9 @@ function BFS(tree) {
     return visitOrder
 }
 
+let tree = new Tree(5)
+tree.insertBSTree(4);
+tree.insertBSTree(6);
+tree.insertBSTree(2);
 
-let tree = new Tree('apple')
-let node2 = new Node('banana')
-tree.getRoot().setLeftChild(node2)
-let node3 = new Node('cherry')
-tree.getRoot().setRightChild(node3)
-let node4 = new Node('dates')
-tree.getRoot().getLeftChild().setLeftChild(node4) 
-
-let deque = new Deque()
-deque.addFront(1)
-deque.addFront(2)
-deque.addRear(3)
-deque.removeFront()
-
-tree.printTree()
+console.log(tree.searchBST(7));
