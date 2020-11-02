@@ -128,8 +128,106 @@ class HashMap {
           }
        }
     }
-
 }
+
+function staircase(n) {
+    let numDict = {};
+    return staircaseRecursive(n, numDict);
+ }
+
+ function staircaseRecursive(n, numDict) {
+    let output;
+    if(n === 1) {
+       output = 1;
+    } else if(n === 2) {
+       output = 2;
+    } else if(n === 3) {
+       output = 4;
+    } else {
+       let firstOutput;
+       let secondOutput;
+       let thirdOutput;
+
+       numDict[n - 1] ? firstOutput = numDict[n - 1] : firstOutput = staircaseRecursive(n - 1, numDict);
+       numDict[n - 2] ? secondOutput = numDict[n - 2] : secondOutput = staircaseRecursive(n - 2, numDict);
+       numDict[n - 3] ? thirdOutput = numDict[n - 3] : thirdOutput = staircaseRecursive(n - 3, numDict);
+
+       output = firstOutput + secondOutput + thirdOutput;
+    } 
+
+    numDict[n] = output;
+    return output;
+ }
+
+pairSumToTarget = function(inputList, target) {
+
+    //create an object to store each element of the list for look up
+    let indexDict = {};
+
+    //traverse the input list
+    for(const [index, element] of inputList.entries()) {
+        //if the "key" is in the object
+        if((target - element) in indexDict) {
+           //return the indices of the elements
+           return [indexDict[target - element], index];
+        }
+        //store the index as a value
+        indexDict[element] = index;
+    }
+    //return [-1, -1] if target is not found
+    return [-1, -1]
+}
+
+longestConsecutiveSubseq = function(inputList) {
+    let dict = {}
+
+    //store indices and values of input list
+    for(const [index, element] of inputList.entries()) {
+       dict[element] = index; 
+    }
+
+    let maxLen = -1;
+    let startsAt = -1;
+
+    for(const [index, element] of inputList.entries()) {
+        let currentStart = index;
+        //mark as visited
+        dict[element] = -1;
+    
+        //initialize length of current subsequence
+        let currentCount = 1
+
+        //check one element forward
+        let current = element + 1;
+        //check if the expected number is available
+        //and has not been visited yet
+        while(current in dict && dict[current] > 0) {
+            currentCount += 1;
+            dict[current] = -1;
+            current = current + 1;
+        }
+
+        current = element - 1;
+        while(current in dict && dict[current] > 0) {
+            currentStart = dict[current];
+            currentCount += 1;
+            dict[current] = -1;
+            current = current - 1;
+        }
+
+        if(currentCount >= maxLen) {
+            if(currentCount === maxLen && currentStart > startsAt) {
+                continue;
+            }
+            //set index of smallest element in current subsequence
+            startsAt = currentStart;
+            maxLen = currentCount;
+        } 
+    }
+
+    let startElement = inputList[startsAt];
+    return Array.from(new Array(maxLen), (x, i) => i + startsAt);
+} 
 
 let hashmap = new HashMap();
 
@@ -138,5 +236,8 @@ hashmap.put("two", 2);
 hashmap.put("three", 3);
 hashmap.put("neo", 11);
 
-console.log("size: ", hashmap.size());
-console.log("two: ", hashmap.get("two"))
+// console.log("size: ", hashmap.size());
+// console.log("two: ", hashmap.get("two"))
+
+let inputList = [5, 4, 7, 10, 1, 3, 55, 2];
+console.log(longestConsecutiveSubseq(inputList))
