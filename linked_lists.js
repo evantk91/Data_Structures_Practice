@@ -6,12 +6,38 @@ class LinkedList {
 
 class ListNode {
     constructor(value, next = null) {
-        this.value = value
-        this.next = next
+        this.value = value;
+        this.next = next;
+    }
+}
+
+class DoublyLinkedList {
+    constructor() {
+        this.head = null;
+        this.tail = null;
+    }
+}
+
+class DoublyLinkedNode {
+    constructor(value, next = null, prev = null) {
+        this.value = value;
+        this.next = next;
+        this.prev = prev;
     }
 }
 
 LinkedList.prototype.toArray = function() {
+    output = []
+    node = this.head
+    //pushes each node into an output array
+    while (node) {
+        output.push(node.value)
+        node = node.next
+    }
+    return output
+}
+
+DoublyLinkedList.prototype.toArray = function() {
     output = []
     node = this.head
     //pushes each node into an output array
@@ -32,7 +58,7 @@ LinkedList.prototype.prepend = function(value) {
     }
 
     //the new node now points to the head
-    newNode.next = this.head
+    newNode.next = this.head;
     this.head = newNode;
     return this.head;
 }
@@ -55,6 +81,33 @@ LinkedList.prototype.append = function(value) {
     tail.next = newNode;
 
     return this.head
+}
+
+DoublyLinkedList.prototype.prepend = function(value) {
+    let newNode = new DoublyLinkedNode(value);
+
+    if(!this.head) {
+        this.head = newNode;
+        return this.head;
+    }
+
+    newNode.next = this.head;
+    this.head.prev = newNode;
+    this.head = newNode;
+}
+
+DoublyLinkedList.prototype.append = function(value) {
+    let newNode = new DoublyLinkedNode(value);
+
+    if(!this.head) {
+        this.head = newNode;
+        this.tail = newNode;
+        return this.head;
+    }
+
+    this.tail.next = newNode;
+    this.tail.next.prev = this.tail;
+    this.tail = newNode;
 }
 
 LinkedList.prototype.removeFirst = function() {
@@ -171,8 +224,9 @@ LinkedList.prototype.insertAt = function(value, index) {
 }
 
 LinkedList.prototype.deleteAt = function(index) {
+    const previous = this.getAt(index - 1);
+
     if(!this.head) {
-        this.head = new ListNode(value);
         return;
     }
 
@@ -181,13 +235,14 @@ LinkedList.prototype.deleteAt = function(index) {
         return;
     }
 
-    const previous = this.getAt(index - 1)
-    if(!previous || !previous.next) {
-        return;
-    }
-    previous.next = previous.next.next;
-    return this.head;
 
+    if(index <= this.size() - 1) {
+        previous.next = previous.next.next;
+        return this.head;
+    } else {
+        this.removeLast();
+    }
+    return this.head;
 }
 
 LinkedList.prototype.reverse = function(head) {
@@ -260,14 +315,23 @@ let list1 = new LinkedList()
 list1.append(1)
 list1.append(4)
 list1.append(5)
+list1.deleteAt(0);
+list1.deleteAt(0);
+list1.deleteAt(0);
+list1.deleteAt(0);
 
 let list2 = new LinkedList()
 list2.append(2)
 list2.append(3)
 list2.append(7)
 
-console.log(list1.toArray())
-console.log(list2.toArray())
+let list3 = new DoublyLinkedList()
+list3.append(2)
+list3.append(3)
+list3.prepend(1)
 
-let list3 = merge(list1, list2)
-console.log(list3.toArray())
+console.log(list1.toArray())
+// console.log(list)
+
+// let list3 = merge(list1, list2)
+// console.log(list3.toArray())
