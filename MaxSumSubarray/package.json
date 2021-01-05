@@ -1,0 +1,14 @@
+{
+  "name": "maxsumsubarray",
+  "version": "1.0.0",
+  "description": "max sum problem from Udacity",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "Evan Greer",
+  "license": "ISC",
+  "devDependencies": {
+    "mocha": "^8.2.1"
+  }
+}
