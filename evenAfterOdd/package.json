@@ -1,0 +1,14 @@
+{
+  "name": "evenafterodd",
+  "version": "1.0.0",
+  "description": "even after odd problem from udacity",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "Evan Greer",
+  "license": "ISC",
+  "devDependencies": {
+    "mocha": "^8.2.1"
+  }
+}
