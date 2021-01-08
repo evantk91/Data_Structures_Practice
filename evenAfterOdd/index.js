@@ -28,9 +28,9 @@ LinkedList.prototype.append = function(value) {
    return this.head;
 }
 
-LinkedList.prototype.toArray = function() {
+function toArray(list) {
    output = []
-   node = this.head
+   node = list.head
    //pushes each node into an output array
    while (node) {
        output.push(node.value)
@@ -48,26 +48,31 @@ function createLinkedList(arr) {
    return list;
 }
 
-function evenAfterOdd(head) {
+function evenAfterOdd(list) {
    //Given a linked list with integer data, arrange the elements in such a manner that all nodes with even numbers placed after odd numbers
    //Do not create any new nodes and avoid using any other data structure
    //The relative order of even and odd elements must not change
 
-   if(!head) {
-      return head;
+   if(!list.head) {
+      return list;
    }
 
+   //set up linked list to store even numbers
    let evenHead = null;
    let evenTail = null;
 
+   //set up linked list to store odd numbers
    let oddHead = null;
    let oddTail = null;
 
-   let current = head;
+   let current = list.head;
 
+   //step through the linked list
    while (current) {
       let nextNode = current.next;
+      //if node value is even
       if(current.value % 2 === 0) {
+         //store even node
          if(!evenHead) {
             evenHead = current;
             evenTail = evenHead;
@@ -76,6 +81,7 @@ function evenAfterOdd(head) {
             evenTail = evenTail.next;
          }     
       } else {
+         //store odd node
          if(!oddHead) {
             oddHead = current;
             oddTail = oddHead;
@@ -84,22 +90,27 @@ function evenAfterOdd(head) {
             oddTail = oddTail.next;
          }
       }
+      //update current node for next iteration
       current.next = null;
       current = nextNode;
    }
 
+   //if there are no odd valued nodes
    if(!oddHead) {
       return evenHead;
    }
 
+   //append the even list to the odd list
    oddTail.next = evenHead;
 
+   //return reordered list
    return oddHead;
 }
 
 module.exports = {
    LinkedList,
    ListNode,
+   toArray,
    createLinkedList,
    evenAfterOdd,    
 }

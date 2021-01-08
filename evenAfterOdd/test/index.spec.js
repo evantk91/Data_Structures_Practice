@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { LinkedList, ListNode, createLinkedList, evenAfterOdd } = require('../index');
+const { LinkedList, ListNode, toArray, createLinkedList, evenAfterOdd } = require('../index');
 
 describe('Even After Odd test cases', () => {
    it('test case #1 - numbers in order', () => {
@@ -7,7 +7,7 @@ describe('Even After Odd test cases', () => {
       let solution = [1, 3, 5, 2, 4, 6];
       let list = createLinkedList(arr);
       let output = evenAfterOdd(list);
-      assert.deepEqual(solution, output.toArray());
+      assert.deepEqual(solution, toArray(list));
    });
    
    it('test case #2 - odd numbers', () => {
@@ -15,7 +15,7 @@ describe('Even After Odd test cases', () => {
       let solution = [1, 3, 5, 7];
       let list = createLinkedList(arr);
       let output = evenAfterOdd(list);
-      assert.deepEqual(solution, output.toArray());
+      assert.deepEqual(solution, toArray(list));
    });
 
    it('test case #3 - even numbers', () => {
@@ -23,6 +23,6 @@ describe('Even After Odd test cases', () => {
       let solution = [2, 4, 6, 8];
       let list = createLinkedList(arr);
       let output = evenAfterOdd(list);
-      assert.deepEqual(solution, output.toArray());
+      assert.deepEqual(solution, toArray(list));
    });
 });
