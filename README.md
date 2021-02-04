@@ -1,1 +1,1 @@
-# Data_Structures_Practice
+# Data Structures Practice
